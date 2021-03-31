@@ -33,7 +33,6 @@
 
 %if %distver == 7
 %define __debug_install_post %{_rpmconfigdir}/find-debuginfo.sh %{?_find_debuginfo_opts} "%{_builddir}/%{?buildsubdir}" %{nil}
-#%global debug_package %{nil}
 %endif
 
 %define _bindir		%{kde_path}/bin
@@ -47,7 +46,7 @@
 %define version   0.1.0
 %define release   1.%{disttag}%{distver}
 %define license   GPL
-#%define group     Applications/File
+#-%define group     Applications/File
 %define group     Development/Libraries
 %define source    %{name}-%{version}.tar.gz
 %define url       https://github.com/Dynasty-Az/libazftp
@@ -74,7 +73,7 @@ Requires:       libazctools >= 2.48.0
 This is a library for FTP client and server.
 
 %package devel
-#Requires:
+#-Requires:
 Summary: %{summary} development files
 Group: %{group}
 Provides: %{name}-devel
@@ -110,7 +109,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 %files
 %defattr(-,root,root,-)
-#%attr(0755,root,root)
+#-%attr(0755,root,root)
 %{_bindir}/azftpd
 %{_bindir}/azftpcli
 %dir %{kde_path}/%{_lib}/%{name}/
