@@ -99,7 +99,7 @@ sleep 5
 
 
 %build
-./configure --prefix=%{_prefix} --libdir=%{_prefix}/%{_lib}
+./configure --prefix=%{_prefix} --libdir=%{_prefix}/%{_lib} CFLAGS="-g -O1 -Wall"
 make
 
 %install
