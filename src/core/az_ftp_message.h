@@ -233,15 +233,17 @@ typedef struct az_ftp_msg_s
 
 #define msg_is_reply(msg) (msg->code >= 100 && msg->code < 600)
 #define msg_is_cmd(msg) (!msg_is_reply(msg))
-//#define az_ftp_response(mp, list, code, res) \
-//{ \
-//    az_ftp_msg reply_d = NULL; \
-//    reply_d = az_ftp_make_reply(mp, code, res); \
-//    if (reply_d != NULL) \
-//        az_list_insert(list, AZ_LIST_TAIL, 0, &reply_d, sizeof(az_ftp_msg)); \
-//    while (az_list_size(list) > 0) \
-//        az_msleep(10); \
-//}
+/*
+#define az_ftp_response(mp, list, code, res) \
+{ \
+    az_ftp_msg reply_d = NULL; \
+    reply_d = az_ftp_make_reply(mp, code, res); \
+    if (reply_d != NULL) \
+        az_list_insert(list, AZ_LIST_TAIL, 0, &reply_d, sizeof(az_ftp_msg)); \
+    while (az_list_size(list) > 0) \
+        az_msleep(10); \
+}
+*/
 
 az_ftp_msg az_ftp_msg_create(az_memp pool);
 const char* az_ftp_msg_to_str(az_ftp_msg msg);

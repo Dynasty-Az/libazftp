@@ -151,7 +151,7 @@ typedef enum az_esckey_e
 static int __escape_seq(uint8_t data[4], int data_size, bool timeout);
 static inline int __get_term_cols(void);
 static inline int __get_term_lines(void);
-static int __get_str_width(az_memp mp, char *str);
+//static int __get_str_width(az_memp mp, char *str);
 static void __az_win_printf(az_memp pool, az_display_ctx display_ctx, const char *fmt, ...);
 static int _az_input_command_th(void *data);
 static const char* __az_get_last_dir(az_main_ctx ctx);
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
     int ser_port = 0;
     int worker_num = 1;
     az_stime_t build_time = { 0 };
-    az_main_ctx_t main_ctx = { 0 };
+    az_main_ctx_t main_ctx;
     az_thread th_cmd = NULL;
 #if defined(__az_windows_32__) || defined(__az_windows_64__)
 #else
@@ -251,6 +251,7 @@ int main(int argc, char *argv[])
     struct timespec del_t = { 0 };
 #endif
 
+    Az_Memzero(&main_ctx, sizeof(az_main_ctx_t));
     setlocale(LC_ALL, "");
     main_ctx.mp = az_memp_create(AZ_MEM_POOL_DEFAULT_SIZE, false);
     if (main_ctx.mp == NULL)
@@ -278,7 +279,7 @@ int main(int argc, char *argv[])
                 main_ctx.user_name = (char *)az_mpcalloc(main_ctx.mp, az_strlen(az_optarg) + 1);
                 if (main_ctx.user_name == NULL)
                 {
-                    printf("  Alloc user name memory [size: %u] from pool \033[;31mfailed\033[0m\n", az_strlen(az_optarg) + 1);
+                    printf("  Alloc user name memory [size: %lu] from pool \033[;31mfailed\033[0m\n", az_strlen(az_optarg) + 1);
                     goto RET_ERR;
                 }
                 az_strncpy(main_ctx.user_name, az_strlen(az_optarg) + 1, az_optarg, az_strlen(az_optarg));
@@ -299,7 +300,7 @@ int main(int argc, char *argv[])
                 main_ctx.pwd = (char *)az_mpcalloc(main_ctx.mp, az_strlen(az_optarg) + 1);
                 if (main_ctx.pwd == NULL)
                 {
-                    printf("  Alloc password memory [size: %u] from pool \033[;31mfailed\033[0m\n", az_strlen(az_optarg) + 1);
+                    printf("  Alloc password memory [size: %lu] from pool \033[;31mfailed\033[0m\n", az_strlen(az_optarg) + 1);
                     goto RET_ERR;
                 }
                 az_strncpy(main_ctx.pwd, az_strlen(az_optarg) + 1, az_optarg, az_strlen(az_optarg));
@@ -560,7 +561,7 @@ static az_ret _az_init_windows(az_main_ctx ctx, const char *ser_ip, const int se
     //int flag = 0;
     char content[128] = { 0 };
     int len = 0;
-    char *line = NULL;
+    //char *line = NULL;
     int err = 0;
 
     if (ctx == NULL)
@@ -652,7 +653,7 @@ static void _az_destory_windows(az_main_ctx ctx)
 static int _az_input_command_th(void *data)
 {
     az_ret flag = 0;
-    char *ret = NULL;
+    //char *ret = NULL;
     az_main_ctx ctx = NULL;
     int com_c_index = 0;
     int com_len = 0;
@@ -668,7 +669,7 @@ static int _az_input_command_th(void *data)
     bool multiline_flag = false;
     az_stime_t push_key = { 0 };
     az_stime_t last_push_key = { 0 };
-    int word_width = 0;
+    //int word_width = 0;
     az_utf8_node_t word = { 0 };
     bool tab_flag = false;
     int histroy_index = 0;
@@ -779,9 +780,9 @@ static int _az_input_command_th(void *data)
         }
         else//输入功能键
         {
-            az_cmd cmd = NULL;
-            az_utf8_node aaaaa = NULL;
-            size_t loop = 0;
+            //az_cmd cmd = NULL;
+            //az_utf8_node aaaaa = NULL;
+            //size_t loop = 0;
         TRANS_FLAG:
             switch (key)
             {
@@ -888,7 +889,7 @@ static int _az_input_command_th(void *data)
 
                 if (!multiline_flag)
                 {
-                    const char *str = NULL;
+                    //const char *str = NULL;
 #ifdef TEST_INPUT
                     __az_win_printf(ctx->mp, &ctx->display_ctx, " Cmd: %s (%d)\n", az_utf8_tostr(parser_buf, 0), az_utf8_len(parser_buf, 0));
                     _insert_histroy(ctx->histroy, parser_buf);
@@ -1559,7 +1560,7 @@ static void __beep(void)
 static void __clear(void)
 {
     char *cmd = NULL;
-    char *exec_cmd = NULL;
+    //char *exec_cmd = NULL;
 
     cmd = tigetstr("clear");
     putp(cmd);
@@ -1827,7 +1828,7 @@ static az_ret az_client_login(az_main_ctx ctx, const az_cmd cmd)
 
     if (az_ftp_client_login(ctx->ftp_client, user, pwd, NULL) == AZ_OK)
     {
-        char *tmp = NULL;
+        //char *tmp = NULL;
         char file_name[128] = { 0 };
 
         ctx->login_stat = AZ_FTP_OKLOGIN;
@@ -2690,10 +2691,10 @@ static az_utf8 __az_gets(az_memp pool, az_main_ctx ctx, bool show)
     }
 END:
     return tmp;
-ERR:
-    if (tmp != NULL)
-        az_utf8_free(&tmp);
-    return NULL;
+//ERR:
+//    if (tmp != NULL)
+//        az_utf8_free(&tmp);
+//    return NULL;
 }
 
 static az_ret __az_parser_file_list(az_memp pool, const char *buf, az_file_list list, bool all)
@@ -2710,7 +2711,7 @@ static az_ret __az_parser_file_list(az_memp pool, const char *buf, az_file_list 
     for (start = buf, end = az_strsstr(start, "\r\n"); end != NULL; start = end + 2, end = az_strsstr(start, "\r\n"))
     {
         Az_Memzero(&info, sizeof(az_file_info_t));
-        sscanf(start, "%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%lld%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\r'|'\n']", info.auth, info.user, info.group, &info.size, info.mouth, info.day, info.time, info.name);
+        sscanf(start, "%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%ld%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\t'| ]%*['\t'| ]%[^'\r'|'\n']", info.auth, info.user, info.group, &info.size, info.mouth, info.day, info.time, info.name);
         if (*info.auth == '\0' || *info.user == '\0' || *info.group == '\0' || *info.mouth == '\0' || *info.day == '\0' || *info.time == '\0' || *info.name == '\0')
             continue;
         if (!all && *info.name == '.')
@@ -3105,13 +3106,13 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
             }
             else//GB
             {
-                size_len = snprintf(NULL, 0, "%lldG", list->node[loop].size / AZ_GB_OFFSET);
+                size_len = snprintf(NULL, 0, "%ldG", list->node[loop].size / AZ_GB_OFFSET);
                 if (list->node[loop].size % AZ_GB_OFFSET > 0)
                     size_len += 2;
             }
         }
         else
-            size_len = snprintf(NULL, 0, "%lld", list->node[loop].size);
+            size_len = snprintf(NULL, 0, "%ld", list->node[loop].size);
         if (size_len > max_size_wide)
             max_size_wide = size_len;
     }
@@ -3124,7 +3125,7 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
             if (readable)
             {
                 if (list->node[loop].size < 1024)//B
-                    __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld", list->node[loop].size);
+                    __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld", list->node[loop].size);
                 else if (list->node[loop].size / AZ_KB_OFFSET < 1024)//KB
                 {
                     off_t inte = list->node[loop].size / AZ_KB_OFFSET;
@@ -3133,7 +3134,7 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
                     if (dec > 0)
                     {
                         dec /= 100;
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld.%lldK", inte, dec);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld.%lldK", inte, dec);
                     }
                     else
                         __az_win_printf(ctx->mp, &ctx->display_ctx, "%lldK", inte);
@@ -3146,7 +3147,7 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
                     if (dec > 0)
                     {
                         dec /= 100000;
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld.%lldM", inte, dec);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld.%lldM", inte, dec);
                     }
                     else
                         __az_win_printf(ctx->mp, &ctx->display_ctx, "%lldM", inte);
@@ -3159,14 +3160,14 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
                     if (dec > 0)
                     {
                         dec /= 100000000;
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld.%lldG", inte, dec);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld.%lldG", inte, dec);
                     }
                     else
                         __az_win_printf(ctx->mp, &ctx->display_ctx, "%lldG", inte);
                 }
             }
             else
-                __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld", list->node[loop].size);
+                __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld", list->node[loop].size);
 
             __az_win_printf(ctx->mp, &ctx->display_ctx, " %s %s %s ", list->node[loop].mouth, list->node[loop].day, list->node[loop].time);
             if (list->node[loop].is_dir)
@@ -3227,8 +3228,8 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
             {
                 if (list->node[loop].size < 1024)//B
                 {
-                    ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lld", list->node[loop].size);
-                    __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld", list->node[loop].size);
+                    ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ld", list->node[loop].size);
+                    __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld", list->node[loop].size);
                 }
                 else if (list->node[loop].size / AZ_KB_OFFSET < 1024)//KB
                 {
@@ -3238,13 +3239,13 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
                     if (dec > 0)
                     {
                         dec /= 100;
-                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lld.%lldK", inte, dec);
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld.%lldK", inte, dec);
+                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ld.%ldK", inte, dec);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld.%ldK", inte, dec);
                     }
                     else
                     {
-                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lldK", inte);
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lldK", inte);
+                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ldK", inte);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ldK", inte);
                     }
                 }
                 else if (list->node[loop].size / AZ_MB_OFFSET < 1024)//MB
@@ -3255,13 +3256,13 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
                     if (dec > 0)
                     {
                         dec /= 100000;
-                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lld.%lldM", inte, dec);
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld.%lldM", inte, dec);
+                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ld.%ldM", inte, dec);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld.%ldM", inte, dec);
                     }
                     else
                     {
-                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lldM", inte);
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lldM", inte);
+                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ldM", inte);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ldM", inte);
                     }
                 }
                 else//GB
@@ -3272,20 +3273,20 @@ static void __az_show_list_ex(az_main_ctx ctx, az_file_list list, bool readable)
                     if (dec > 0)
                     {
                         dec /= 100000000;
-                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lld.%lldG", inte, dec);
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld.%lldG", inte, dec);
+                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ld.%ldG", inte, dec);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld.%ldG", inte, dec);
                     }
                     else
                     {
-                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lldG", inte);
-                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%lldG", inte);
+                        ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ldG", inte);
+                        __az_win_printf(ctx->mp, &ctx->display_ctx, "%ldG", inte);
                     }
                 }
             }
             else
             {
-                ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%lld", list->node[loop].size);
-                __az_win_printf(ctx->mp, &ctx->display_ctx, "%lld", list->node[loop].size);
+                ctx->display_ctx.cursor_y = size_end - snprintf(NULL, 0, "%ld", list->node[loop].size);
+                __az_win_printf(ctx->mp, &ctx->display_ctx, "%ld", list->node[loop].size);
             }
             ctx->display_ctx.cursor_y = mouth_start;
             __az_win_printf(ctx->mp, &ctx->display_ctx, "%s", list->node[loop].mouth);
@@ -3344,6 +3345,7 @@ static const char* __az_get_last_dir(az_main_ctx ctx)
     return (const char*)&pwd[loop];
 }
 
+/*
 static int __get_str_width(az_memp mp, char *str)
 {
     az_utf8 input = NULL;
@@ -3369,3 +3371,4 @@ static int __get_str_width(az_memp mp, char *str)
 
     return width;
 }
+*/

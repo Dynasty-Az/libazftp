@@ -2,7 +2,7 @@
 /* include/libazftpcnf.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Project build UTC time */
-#define AZ_BUILD_TIME 1617156257
+#define AZ_BUILD_TIME 1617177725
 
 /* Major version number of package */
 #define AZ_MAJOR_VERSION 0

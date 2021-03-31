@@ -496,7 +496,7 @@ az_ftp_server az_ftp_server_init(az_ftp_config cnf)
     tmp = (az_ftp_server)az_mpcalloc(mp, sizeof(az_ftp_server_t));
     if (tmp == NULL)
     {
-        az_writelog(AZ_LOG_ERROR, "Az FTP: alloc server ctx memory [size:%u] failed", sizeof(az_ftp_server_t));
+        az_writelog(AZ_LOG_ERROR, "Az FTP: alloc server ctx memory [size:%lu] failed", sizeof(az_ftp_server_t));
         goto ERR;
     }
     tmp->mp = mp;
@@ -658,8 +658,8 @@ bool az_ftp_server_stat(az_ftp_server ctx)
 
 void az_ftp_server_destory(az_ftp_server *ctx)
 {
-    int flag = 0;
-    az_ftp_client cli_ctx = NULL;
+    //int flag = 0;
+    //az_ftp_client cli_ctx = NULL;
 
     if (*ctx == NULL)
         return;
@@ -710,11 +710,12 @@ static int _az_ftp_server_listen_handle(void *data)
     struct epoll_event events[100];
     az_ftp_client cli_ctx = NULL;
     az_task_info_t cli_task = { 0 };
-    az_ftp_trans_ctx_t trans_ctx = { 0 };
+    az_ftp_trans_ctx_t trans_ctx;
 
     if (data == NULL)
         return AZ_ERROR;
     ser_ctx = (az_ftp_server)data;
+    Az_Memzero(&trans_ctx, sizeof(az_ftp_trans_ctx_t));
 
     ev.data.fd = az_socket_get_fd(ser_ctx->listen_fd);  //设置要处理的事件类型
     ev.events = EPOLLIN;
@@ -906,7 +907,7 @@ static int _az_ftp_server_recv_handle(void *data)
     int ev_count = 0;
     int last_count = 0;
     int recv_len = 0;
-    struct epoll_event ev;
+    //struct epoll_event ev;
     struct epoll_event *events = NULL;
     az_ftp_client cli_ctx = NULL;
     az_ftp_msg cmd = NULL;
@@ -928,7 +929,7 @@ static int _az_ftp_server_recv_handle(void *data)
                 events = (struct epoll_event *)az_mpcalloc(ctx->mp, sizeof(struct epoll_event)*ev_count);
                 if (events == NULL)
                 {
-                    az_writelog(AZ_LOG_ERROR, "ftp recv hand: alloc epoll events memory [size:%u] failed", sizeof(struct epoll_event)*ev_count);
+                    az_writelog(AZ_LOG_ERROR, "ftp recv hand: alloc epoll events memory [size:%lu] failed", sizeof(struct epoll_event)*ev_count);
                     continue;
                 }
             }
@@ -939,7 +940,7 @@ static int _az_ftp_server_recv_handle(void *data)
                 tmp = (struct epoll_event *)az_mprealloc(ctx->mp, (void **)&events, sizeof(struct epoll_event)*ev_count);
                 if (tmp == NULL)
                 {
-                    az_writelog(AZ_LOG_ERROR, "ftp recv hand: realloc epoll events memory [size:%u] failed", sizeof(struct epoll_event)*ev_count);
+                    az_writelog(AZ_LOG_ERROR, "ftp recv hand: realloc epoll events memory [size:%lu] failed", sizeof(struct epoll_event)*ev_count);
                     ev_count = last_count;
                 }
                 else
@@ -994,7 +995,7 @@ static int _az_ftp_server_send_handle(void *data)
 {
     int flag = 0;
     int num = 0;
-    int loop = 0;
+    //int loop = 0;
     struct epoll_event ev;
     struct epoll_event events[1];
     az_ftp_client cli_ctx = NULL;

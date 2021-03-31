@@ -204,7 +204,7 @@ static int __az_ftp_check_pwd(az_ftp_client client, const char *pwd)
 static void _az_ftp_cmd_user(az_ftp_client client, az_ftp_msg cmd)
 {
     int flag = 0;
-    az_ftp_msg reply = NULL;
+    //az_ftp_msg reply = NULL;
 
     if (client == NULL || cmd == NULL)
         return;
@@ -626,6 +626,8 @@ static void _az_ftp_cmd_type(az_ftp_client client, az_ftp_msg cmd)
     case AZ_DATA_LOCAL:
         az_strcatchr(text, 1024, 'L');
         break;
+    default:
+        break;
     }
     if (data_type <= AZ_DATA_EBCDIC)
     {
@@ -639,6 +641,8 @@ static void _az_ftp_cmd_type(az_ftp_client client, az_ftp_msg cmd)
             break;
         case AZ_FORMAT_CONTROL:
             az_strcatstr(text, 1024, " C");
+            break;
+        default:
             break;
         }
     }
@@ -961,7 +965,7 @@ static void _az_ftp_cmd_rnfr(az_ftp_client client, az_ftp_msg cmd)
     char ch_dir[AZ_FTP_PATH_MAX_LEN] = { 0 };
     char tmp_dir[AZ_FTP_PATH_MAX_LEN] = { 0 };
     char rn_dir[AZ_FTP_PATH_MAX_LEN] = { 0 };
-    struct stat statbuf;
+    //struct stat statbuf;
 
     if (client == NULL || cmd == NULL)
         return;
@@ -1028,7 +1032,7 @@ static void _az_ftp_cmd_rnto(az_ftp_client client, az_ftp_msg cmd)
     char ch_dir[AZ_FTP_PATH_MAX_LEN] = { 0 };
     char tmp_dir[AZ_FTP_PATH_MAX_LEN] = { 0 };
     char rn_dir[AZ_FTP_PATH_MAX_LEN] = { 0 };
-    struct stat statbuf;
+    //struct stat statbuf;
 
     if (client == NULL || cmd == NULL)
         return;

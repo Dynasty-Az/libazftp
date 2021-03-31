@@ -523,7 +523,7 @@ static az_net create_ftp_fd(az_memp pool, az_ftp_dtp_mode dtp_mode, az_net *list
     az_net tmp = NULL;
     int epfd = -1;
     struct epoll_event ev;
-    az_netinfo_ipv4_t netinfo = { 0 };
+    az_netinfo_ipv4_t netinfo;
 
     if (dtp_mode == DTP_ACTIVE_MODE)
     {

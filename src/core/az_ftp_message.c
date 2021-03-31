@@ -441,7 +441,7 @@ GET_ARGV:
     }
 
     ret = AZ_OK;
-END:
+//END:
     *cmd_end = '\r';
     cmd_end += 2;
     offset = cmd_end - recv_buf;
@@ -612,7 +612,7 @@ ERR:
 az_ftp_msg az_ftp_make_cmd(az_memp pool, az_ftp_cmd cmd, const char *argv)
 {
     az_ftp_msg tmp = NULL;
-    int len = 0;
+    //int len = 0;
 
     if (pool == NULL)
         return NULL;

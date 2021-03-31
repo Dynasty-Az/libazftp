@@ -43,7 +43,7 @@ static az_ret _az_ftp_client_pwd(az_ftp_client client);
 
 az_ftp_client az_ftp_client_open(const char *ser_ip, int ser_port, int max_th, bool log_flag)
 {
-    az_ret flag = 0;
+    //az_ret flag = 0;
     az_memp mp = NULL;
     az_ftp_client tmp = NULL;
 
@@ -757,7 +757,6 @@ static az_ret _az_create_trans(az_ftp_client client, az_trans_type type, const c
             int loop = 0;
             az_list dir_stack = NULL;
             int deep = 0;
-            char *tmp_list_data = list_data;
             char dir[AZ_FTP_PATH_MAX_LEN] = { 0 };
             char path[AZ_FTP_PATH_MAX_LEN] = { 0 };
             char rm_path[AZ_FTP_PATH_MAX_LEN] = { 0 };
@@ -882,9 +881,7 @@ static inline bool _az_remote_is_dir(const char *data)
             return true;
         else
         {
-            char auth[10] = { 0 };
-            sscanf(data, "%[^'\t'| ]%*['\t'| ]%*[^'\t'| ]%*['\t'| ]%*[^'\t'| ]%*['\t'| ]%*ld%*['\t'| ]%*[^'\t'| ]%*['\t'| ]%*[^'\t'| ]%*['\t'| ]%*[^'\t'| ]%*['\t'| ]%*[^'\r'|'\n']", auth);
-            if (*auth == 'd')
+            if (*data == 'd')
                 return true;
         }
     }
@@ -896,7 +893,7 @@ static az_ret _az_rmkdir_loop(az_ftp_client client, const char *remote_path)
 {
     char *end = NULL;
     char tmp_path[AZ_FTP_PATH_MAX_LEN] = { 0 };
-    az_clictrl_ev ev = NULL;
+    //az_clictrl_ev ev = NULL;
 
     if (remote_path == NULL || *remote_path == '\0')
         return AZ_ERROR;

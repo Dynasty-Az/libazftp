@@ -25,7 +25,7 @@ static void _az_print_help_info(void);
 
 int main(int argc, char *argv[])
 {
-    az_ret flag = 0;
+    int flag = 0;
     int op_index = 0;
     az_ftp_server server = NULL;
     az_ftp_config_t ftp_cnf = { 0 };

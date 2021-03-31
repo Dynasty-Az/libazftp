@@ -1,4 +1,8 @@
 ﻿#include"az_ftp_client_dtp.h"
+#if defined(__az_windows_32__) || defined(__az_windows_64__)
+#else
+#include<sys/sendfile.h>
+#endif
 
 typedef struct az_mini_client_s
 {
