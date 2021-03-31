@@ -33,6 +33,7 @@
 
 %if %distver == 7
 %define __debug_install_post %{_rpmconfigdir}/find-debuginfo.sh %{?_find_debuginfo_opts} "%{_builddir}/%{?buildsubdir}" %{nil}
+#%global debug_package %{nil}
 %endif
 
 %define _bindir		%{kde_path}/bin
@@ -46,7 +47,8 @@
 %define version   0.1.0
 %define release   1.%{disttag}%{distver}
 %define license   GPL
-%define group     Applications/File
+#%define group     Applications/File
+%define group     Development/Libraries
 %define source    %{name}-%{version}.tar.gz
 %define url       https://github.com/Dynasty-Az/libazftp
 %define vendor    Az
@@ -69,7 +71,7 @@ Requires:       libazctools >= 2.48.0
 
 
 %description
-This is a library for memroy pool and some tools.
+This is a library for FTP client and server.
 
 %package devel
 #Requires:
@@ -114,8 +116,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %dir %{kde_path}/%{_lib}/%{name}/
 %{kde_path}/%{_lib}/%{name}/*.so
 %{kde_path}/%{_lib}/%{name}/*.so.*
-/etc/*
-/etc/.*
+
+%config(noreplace) /etc/azftpd.cnf
+%config(noreplace) /etc/.azftpd_auth
 
 %files devel
 %dir %{kde_path}/include/azftp/
