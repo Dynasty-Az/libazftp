@@ -1,0 +1,9 @@
+###################################Fvc FTP server auth file##########################################
+#                                                                                                   #
+#                                   user:pass                                                       #
+#                  The password is empty and there is no password                                   #
+#                  user name max len (15)                                                           #
+#                  password max len (31)                                                            #
+#####################################################################################################
+guest:
+qiao:123456
